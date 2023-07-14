@@ -1,0 +1,16 @@
+*.project
+*.classpath
+*.settings
+*.iml
+.idea
+/*/target
+*/target
+logs
+*.classpath
+*.log*
+.DS_Store
+*.mvn
+mvnw.*
+mvnw
+.mvn
+/spring-boot-local-common-test/src/*

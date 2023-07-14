@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level - traceId:[%X{traceId}] spanId:[%X{spanId}] %c{36} -- %m%n</Property>
+        <Property name="LOG_PATTERN_ERROR">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level - traceId:[%X{traceId}] spanId:[%X{spanId}] %c{36} %l %M -- %m%n</Property>
+        <Property name="APP_LOG_ROOT">/data/logs</Property>
+        <Property name="APP_LOG_NAME">opentelemetry-java</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout charset="UTF-8" pattern="${LOG_PATTERN}"/>
+        </Console>
+        <RollingFile name="RollingFileInfo"
+                     fileName="${APP_LOG_ROOT}/${APP_LOG_NAME}-info.log"
+                     filePattern="${APP_LOG_ROOT}/${date:yyyy-MM}/${APP_LOG_NAME}-info-%d{yyyy-MM-dd}-%i.log">
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout charset="UTF-8" pattern="${LOG_PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+        <RollingRandomAccessFile name="RollingFileError"
+                                 fileName="${APP_LOG_ROOT}/${APP_LOG_NAME}-error.log"
+                                 filePattern="${APP_LOG_ROOT}/${date:yyyy-MM}/${APP_LOG_NAME}-error-%d{yyyy-MM-dd}-%i.log">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout charset="UTF-8" pattern="${LOG_PATTERN_ERROR}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFileInfo"/>
+        </Root>
+        <Logger name="org.springframework" additivity="false">
+            <AppenderRef ref="RollingFileInfo"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.mybatis" additivity="false">
+            <AppenderRef ref="RollingFileInfo"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.frank" additivity="false">
+            <AppenderRef ref="RollingFileInfo"/>
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="org.mybatis" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="java.sql" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="java.sql.Connection" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="java.sql.Statement" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="java.sql.PreparedStatement" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+    </Loggers>
+</Configuration>
